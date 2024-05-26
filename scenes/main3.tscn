@@ -1,0 +1,351 @@
+[gd_scene load_steps=19 format=3 uid="uid://bdg7hll61fxy8"]
+
+[ext_resource type="Script" path="res://code/LeaderManager.gd" id="2_76q73"]
+[ext_resource type="Script" path="res://code/AttachToObject.gd" id="3_0yxdv"]
+[ext_resource type="Script" path="res://code/FlipperManager.gd" id="3_56ysn"]
+[ext_resource type="Script" path="res://code/RigidLeaderManager.gd" id="3_s4n43"]
+[ext_resource type="Script" path="res://code/Enemy.gd" id="5_2df76"]
+[ext_resource type="Script" path="res://code/AimAssist.gd" id="5_c37e2"]
+[ext_resource type="Script" path="res://code/Deathzone.gd" id="7_0v4u8"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_btnra"]
+rough = true
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rp861"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_useg0"]
+radius = 16.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_86ujr"]
+absorbent = true
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_oq6wd"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4t8dv"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7vehf"]
+friction = 0.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cldbn"]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_56fdl"]
+radius = 18.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0bbqp"]
+size = Vector2(208, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n62yf"]
+size = Vector2(192, 496)
+
+[node name="Main" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Player" type="Node2D" parent="."]
+
+[node name="Leader(Rigidbody)" type="Node2D" parent="Player"]
+visible = false
+position = Vector2(-264, 0)
+
+[node name="RigidBody2D" type="RigidBody2D" parent="Player/Leader(Rigidbody)" node_paths=PackedStringArray("healthBarObj", "auraObj", "leftFlipperObj", "rightFlipperObj")]
+rotation = -7.43628e-05
+mass = 0.5
+physics_material_override = SubResource("PhysicsMaterial_btnra")
+gravity_scale = 0.25
+can_sleep = false
+script = ExtResource("3_s4n43")
+flipSpeed = 200.0
+healthBarObj = NodePath("../HealthBar/Top")
+auraObj = NodePath("Aura")
+leftFlipperObj = NodePath("../../../Flippers/LeftFlipper/LeftFlipperBody")
+rightFlipperObj = NodePath("../../../Flippers/RightFlipper/RightFlipperBody")
+
+[node name="Polygon2D" type="Polygon2D" parent="Player/Leader(Rigidbody)/RigidBody2D"]
+position = Vector2(-9, 3)
+scale = Vector2(0.75, 0.75)
+polygon = PackedVector2Array(0, -8, 0, 0, 8, 8, 16, 8, 24, 0, 24, -8, 16, -16, 8, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Leader(Rigidbody)/RigidBody2D"]
+shape = SubResource("CircleShape2D_rp861")
+
+[node name="Aura" type="Area2D" parent="Player/Leader(Rigidbody)/RigidBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Leader(Rigidbody)/RigidBody2D/Aura"]
+shape = SubResource("CircleShape2D_useg0")
+
+[node name="HealthBar" type="Node2D" parent="Player/Leader(Rigidbody)" node_paths=PackedStringArray("attachTarget")]
+script = ExtResource("3_0yxdv")
+attachTarget = NodePath("../RigidBody2D")
+
+[node name="Bottom" type="Polygon2D" parent="Player/Leader(Rigidbody)/HealthBar"]
+position = Vector2(-16, -16)
+scale = Vector2(0.994811, 1)
+color = Color(0.933333, 0.286275, 0.364706, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Top" type="Polygon2D" parent="Player/Leader(Rigidbody)/HealthBar"]
+position = Vector2(-16, -16)
+color = Color(0.176471, 1, 0.25098, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Leader(Character)" type="Node2D" parent="Player"]
+position = Vector2(-112, 0)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="Player/Leader(Character)" node_paths=PackedStringArray("healthBarObj", "auraObj", "leftFlipperObj", "rightFlipperObj", "fieldLeftObj", "fieldRightObj", "nEnemyTether")]
+floor_stop_on_slope = false
+floor_max_angle = 0.0
+script = ExtResource("2_76q73")
+gravity = 500.0
+momentumCorrection = 10.0
+dashPower = 200.0
+flipPower = 1800.0
+speed = 0.5
+healthBarObj = NodePath("../HealthBar/Top")
+auraObj = NodePath("Aura")
+leftFlipperObj = NodePath("../../../Flippers/LeftFlipper/LeftFlipperBody")
+rightFlipperObj = NodePath("../../../Flippers/RightFlipper/RightFlipperBody")
+fieldLeftObj = NodePath("../../../Field/LeftField")
+fieldRightObj = NodePath("../../../Field/RightField")
+nEnemyTether = NodePath("../Debug/Line2D")
+
+[node name="Polygon2D" type="Polygon2D" parent="Player/Leader(Character)/CharacterBody2D"]
+position = Vector2(-8.99978, 3.00067)
+rotation = -7.43628e-05
+scale = Vector2(0.75, 0.75)
+polygon = PackedVector2Array(0, -8, 0, 0, 8, 8, 16, 8, 24, 0, 24, -8, 16, -16, 8, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Leader(Character)/CharacterBody2D"]
+shape = SubResource("CircleShape2D_rp861")
+
+[node name="Aura" type="Area2D" parent="Player/Leader(Character)/CharacterBody2D"]
+rotation = -7.43628e-05
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Leader(Character)/CharacterBody2D/Aura"]
+shape = SubResource("CircleShape2D_useg0")
+
+[node name="HealthBar" type="Node2D" parent="Player/Leader(Character)" node_paths=PackedStringArray("attachTarget")]
+script = ExtResource("3_0yxdv")
+attachTarget = NodePath("../CharacterBody2D")
+
+[node name="Bottom" type="Polygon2D" parent="Player/Leader(Character)/HealthBar"]
+position = Vector2(-16, -16)
+scale = Vector2(0.994811, 1)
+color = Color(0.933333, 0.286275, 0.364706, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Top" type="Polygon2D" parent="Player/Leader(Character)/HealthBar"]
+position = Vector2(-16, -16)
+color = Color(0.176471, 1, 0.25098, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Debug" type="Node2D" parent="Player/Leader(Character)"]
+position = Vector2(80, 0)
+
+[node name="Line2D" type="Line2D" parent="Player/Leader(Character)/Debug"]
+points = PackedVector2Array(0, 0, 0, 0)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Enemy" type="Node2D" parent="Enemies"]
+position = Vector2(40, -32)
+
+[node name="EnemyBody" type="AnimatableBody2D" parent="Enemies/Enemy" node_paths=PackedStringArray("healthBarObj")]
+physics_material_override = SubResource("PhysicsMaterial_86ujr")
+script = ExtResource("5_2df76")
+healthBarObj = NodePath("../HealthBar/Top")
+
+[node name="Polygon2D" type="Polygon2D" parent="Enemies/Enemy/EnemyBody"]
+color = Color(0.626713, 0.944961, 0.985935, 1)
+polygon = PackedVector2Array(-16, -16, -16, 16, 16, 16, 16, -16)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Enemies/Enemy/EnemyBody"]
+scale = Vector2(2.5, 2.5)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[node name="HealthBar" type="Node2D" parent="Enemies/Enemy" node_paths=PackedStringArray("attachTarget")]
+script = ExtResource("3_0yxdv")
+attachTarget = NodePath("../EnemyBody")
+
+[node name="Bottom" type="Polygon2D" parent="Enemies/Enemy/HealthBar"]
+position = Vector2(-16, -24)
+scale = Vector2(0.994811, 1)
+color = Color(0.933333, 0.286275, 0.364706, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Top" type="Polygon2D" parent="Enemies/Enemy/HealthBar"]
+position = Vector2(-16, -24)
+color = Color(0.176471, 1, 0.25098, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Enemy2" type="Node2D" parent="Enemies"]
+position = Vector2(-64, 72)
+
+[node name="EnemyBody" type="AnimatableBody2D" parent="Enemies/Enemy2" node_paths=PackedStringArray("healthBarObj")]
+physics_material_override = SubResource("PhysicsMaterial_86ujr")
+script = ExtResource("5_2df76")
+healthBarObj = NodePath("../HealthBar/Top")
+
+[node name="Polygon2D" type="Polygon2D" parent="Enemies/Enemy2/EnemyBody"]
+color = Color(0.626713, 0.944961, 0.985935, 1)
+polygon = PackedVector2Array(-16, -16, -16, 16, 16, 16, 16, -16)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Enemies/Enemy2/EnemyBody"]
+scale = Vector2(2.5, 2.5)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[node name="HealthBar" type="Node2D" parent="Enemies/Enemy2" node_paths=PackedStringArray("attachTarget")]
+script = ExtResource("3_0yxdv")
+attachTarget = NodePath("../EnemyBody")
+
+[node name="Bottom" type="Polygon2D" parent="Enemies/Enemy2/HealthBar"]
+position = Vector2(-16, -24)
+scale = Vector2(0.994811, 1)
+color = Color(0.933333, 0.286275, 0.364706, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Top" type="Polygon2D" parent="Enemies/Enemy2/HealthBar"]
+position = Vector2(-16, -24)
+color = Color(0.176471, 1, 0.25098, 1)
+polygon = PackedVector2Array(0, 0, 0, -8, 32, -8, 32, 0)
+
+[node name="Flippers" type="Node2D" parent="." node_paths=PackedStringArray("rightFlipper", "leftFlipper")]
+script = ExtResource("3_56ysn")
+rightFlipper = NodePath("RightFlipper/RightFlipperBody")
+leftFlipper = NodePath("LeftFlipper/LeftFlipperBody")
+
+[node name="LeftFlipper" type="Node2D" parent="Flippers"]
+position = Vector2(-112, 232)
+rotation = 0.314159
+
+[node name="LeftFlipperBody" type="AnimatableBody2D" parent="Flippers/LeftFlipper"]
+physics_material_override = SubResource("PhysicsMaterial_oq6wd")
+
+[node name="Polygon2D" type="Polygon2D" parent="Flippers/LeftFlipper/LeftFlipperBody"]
+position = Vector2(120, -224)
+polygon = PackedVector2Array(-128, 224, -120, 216, -16, 216, -16, 232, -120, 232)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Flippers/LeftFlipper/LeftFlipperBody"]
+position = Vector2(120, -224)
+polygon = PackedVector2Array(-120, 216, -16, 216, -16, 232, -120, 232, -128, 224)
+one_way_collision = true
+
+[node name="RightFlipper" type="Node2D" parent="Flippers"]
+position = Vector2(112, 232)
+rotation = -0.314159
+
+[node name="RightFlipperBody" type="AnimatableBody2D" parent="Flippers/RightFlipper"]
+physics_material_override = SubResource("PhysicsMaterial_4t8dv")
+
+[node name="Polygon2D" type="Polygon2D" parent="Flippers/RightFlipper/RightFlipperBody"]
+position = Vector2(8, -224)
+polygon = PackedVector2Array(-112, 216, -8, 216, 0, 224, -8, 232, -112, 232)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Flippers/RightFlipper/RightFlipperBody"]
+position = Vector2(8, -224)
+polygon = PackedVector2Array(-112, 216, -8, 216, 0, 224, -8, 232, -112, 232)
+one_way_collision = true
+
+[node name="Border" type="Node2D" parent="."]
+
+[node name="Catcher" type="StaticBody2D" parent="Border"]
+position = Vector2(0, 248)
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/Catcher"]
+color = Color(0.551854, 0.428442, 0.789775, 1)
+polygon = PackedVector2Array(-192, -19, -192, 77, 192, 77, 192, -19, 0, 45)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border/Catcher"]
+polygon = PackedVector2Array(0, 45, 192, -19, 192, 77, -192, 77, -192, -19)
+
+[node name="LeftSkew" type="StaticBody2D" parent="Border"]
+physics_material_override = SubResource("PhysicsMaterial_7vehf")
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/LeftSkew"]
+color = Color(0.525101, 0.525101, 0.525101, 1)
+polygon = PackedVector2Array(-176, 176, -176, 224, -120, 248, -112, 216)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border/LeftSkew"]
+polygon = PackedVector2Array(-176, 176, -112, 216, -120, 248, -176, 224)
+
+[node name="RightSkew" type="StaticBody2D" parent="Border"]
+position = Vector2(304, 0)
+physics_material_override = SubResource("PhysicsMaterial_cldbn")
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/RightSkew"]
+color = Color(0.525101, 0.525101, 0.525101, 1)
+polygon = PackedVector2Array(-192, 216, -184, 248, -128, 224, -128, 176)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border/RightSkew"]
+polygon = PackedVector2Array(-192, 216, -128, 176, -128, 224, -184, 248)
+
+[node name="Cover" type="StaticBody2D" parent="Border"]
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/Cover"]
+color = Color(0.525101, 0.525101, 0.525101, 1)
+polygon = PackedVector2Array(-176, 224, -200, 224, -200, -168, -152, -296, 152, -296, 200, -168, 200, 224, 176, 224, 176, -168, 136, -280, -136, -280, -176, -168)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Border/Cover"]
+position = Vector2(-16, -48)
+polygon = PackedVector2Array(-184, 272, -184, -120, -184, -312, 216, -312, 216, -120, 216, 272, 192, 272, 192, -120, 152, -232, -120, -232, -160, -120, -160, 272)
+
+[node name="DeathZone" type="Area2D" parent="Border" node_paths=PackedStringArray("playerObj")]
+position = Vector2(0, 304)
+script = ExtResource("7_0v4u8")
+playerObj = NodePath("../../Player/Leader(Character)/CharacterBody2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Border/DeathZone"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_56fdl")
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/DeathZone"]
+position = Vector2(0, -8)
+color = Color(0.766396, 0.0549949, 2.88785e-07, 1)
+polygon = PackedVector2Array(16, -8, 16, 8, 8, 16, -0.343826, 16, -8, 16, -16, 8, -16, -8, -16, -8, -8, -16, -8, -16, 8, -16)
+
+[node name="Side(Debug)" type="StaticBody2D" parent="Border"]
+
+[node name="Polygon2D" type="Polygon2D" parent="Border/Side(Debug)"]
+polygon = PackedVector2Array(-408, 200, -200, 200, -200, 216, -408, 216)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Border/Side(Debug)"]
+position = Vector2(-304, 208)
+shape = SubResource("RectangleShape2D_0bbqp")
+
+[node name="Aim" type="Node2D" parent="." node_paths=PackedStringArray("originLeftObj", "originRightObj", "targetObj", "targetObjOffset", "lineLeftObj", "lineRightObj", "playerObject")]
+script = ExtResource("5_c37e2")
+originLeftObj = NodePath("OriginLeft")
+originRightObj = NodePath("OriginRight")
+targetObj = NodePath("../Player/Leader(Rigidbody)/RigidBody2D")
+targetObjOffset = NodePath("../Player/Leader(Rigidbody)")
+lineLeftObj = NodePath("AimLeft")
+lineRightObj = NodePath("AimRight")
+playerObject = NodePath("../Player/Leader(Rigidbody)/RigidBody2D")
+
+[node name="OriginLeft" type="Node2D" parent="Aim"]
+position = Vector2(-64, 248)
+
+[node name="OriginRight" type="Node2D" parent="Aim"]
+position = Vector2(64, 248)
+
+[node name="AimLeft" type="Line2D" parent="Aim"]
+points = PackedVector2Array(0, 0, 0, 0, 0, 0)
+width = 5.0
+
+[node name="AimRight" type="Line2D" parent="Aim"]
+points = PackedVector2Array(0, 0, 0, 0, 0, 0)
+width = 5.0
+
+[node name="Field" type="Node2D" parent="."]
+
+[node name="LeftField" type="Area2D" parent="Field"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Field/LeftField"]
+position = Vector2(-96, -40)
+shape = SubResource("RectangleShape2D_n62yf")
+
+[node name="RightField" type="Area2D" parent="Field"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Field/RightField"]
+position = Vector2(96, -40)
+shape = SubResource("RectangleShape2D_n62yf")

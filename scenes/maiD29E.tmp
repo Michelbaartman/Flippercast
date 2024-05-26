@@ -1,0 +1,130 @@
+[gd_scene load_steps=9 format=3 uid="uid://dbd5i0s12h5x6"]
+
+[ext_resource type="Texture2D" uid="uid://ded5o81sv0sk3" path="res://icon.svg" id="1_6kvdi"]
+[ext_resource type="Script" path="res://code/charactermanager.gd" id="2_6k0ys"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a0eq5"]
+size = Vector2(74.0908, 125.781)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1hofq"]
+size = Vector2(73.3582, 130.474)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ifnv"]
+size = Vector2(74.0908, 126.953)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bg72g"]
+size = Vector2(90.9653, 132.966)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_34ou1"]
+radius = 53.1803
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8mqxm"]
+bounce = 0.4
+
+[node name="Main" type="Node2D"]
+scale = Vector2(0.99257, 1)
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Border" type="Node2D" parent="World"]
+
+[node name="Wall_Left" type="Sprite2D" parent="World/Border"]
+position = Vector2(475, 0)
+scale = Vector2(0.321796, 5.12)
+texture = ExtResource("1_6kvdi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Border/Wall_Left"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Border/Wall_Left/StaticBody2D"]
+position = Vector2(-26.5211, -0.195313)
+shape = SubResource("RectangleShape2D_a0eq5")
+
+[node name="Wall_Top" type="Sprite2D" parent="World/Border"]
+position = Vector2(0, -320)
+rotation = 1.5708
+scale = Vector2(-0.14205, 7.5673)
+texture = ExtResource("1_6kvdi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Border/Wall_Top"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Border/Wall_Top/StaticBody2D"]
+position = Vector2(-26.6792, 5.68434e-13)
+shape = SubResource("RectangleShape2D_1hofq")
+
+[node name="Wall_Right" type="Sprite2D" parent="World/Border"]
+position = Vector2(-475, 0)
+scale = Vector2(0.321796, 5.12)
+texture = ExtResource("1_6kvdi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Border/Wall_Right"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Border/Wall_Right/StaticBody2D"]
+position = Vector2(27.0454, 0)
+shape = SubResource("RectangleShape2D_4ifnv")
+
+[node name="Wall_Bottom" type="Sprite2D" parent="World/Border"]
+position = Vector2(0, 320)
+rotation = 1.5708
+scale = Vector2(-0.142911, 7.6073)
+texture = ExtResource("1_6kvdi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Border/Wall_Bottom"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Border/Wall_Bottom/StaticBody2D"]
+position = Vector2(17.4934, 0)
+shape = SubResource("RectangleShape2D_bg72g")
+
+[node name="Flippers" type="Node2D" parent="World"]
+position = Vector2(1.00749, 219)
+rotation = -0.172803
+
+[node name="FlipperBox" type="Sprite2D" parent="World/Flippers"]
+rotation = 0.286719
+scale = Vector2(1.36269, 0.28)
+texture = ExtResource("1_6kvdi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Flippers/FlipperBox"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World/Flippers/FlipperBox/StaticBody2D"]
+polygon = PackedVector2Array(50, -50, -50, -50, -50, 50, 50, 50)
+
+[node name="Character (CharacterTest)" type="Node2D" parent="World"]
+visible = false
+position = Vector2(-40.2994, 1)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="World/Character (CharacterTest)"]
+scale = Vector2(0.303102, 0.331085)
+script = ExtResource("2_6k0ys")
+flipSpeed = null
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Character (CharacterTest)/CharacterBody2D"]
+scale = Vector2(1, 1)
+texture = ExtResource("1_6kvdi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Character (CharacterTest)/CharacterBody2D"]
+shape = SubResource("CircleShape2D_34ou1")
+
+[node name="Character (RigidbodyTest)" type="Node2D" parent="World" node_paths=PackedStringArray("colorObject", "colObject")]
+position = Vector2(28, 1)
+script = ExtResource("2_6k0ys")
+flipSpeed = null
+colorObject = NodePath("RigidBody2D/Polygon2D")
+colObject = NodePath("RigidBody2D/CollisionShape2D")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="World/Character (RigidbodyTest)"]
+physics_material_override = SubResource("PhysicsMaterial_8mqxm")
+
+[node name="Polygon2D" type="Polygon2D" parent="World/Character (RigidbodyTest)/RigidBody2D"]
+position = Vector2(0.209583, 0)
+polygon = PackedVector2Array(0, -16, -12.0898, -11, -16.1198, 0, -11.0823, 11, 0, 16, 11.0823, 12, 16.1198, 0, 12.0898, -11)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Character (RigidbodyTest)/RigidBody2D"]
+scale = Vector2(0.3, 0.3)
+shape = SubResource("CircleShape2D_34ou1")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Character (RigidbodyTest)/RigidBody2D"]
+visible = false
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_6kvdi")
+
+[node name="Camera" type="Camera2D" parent="."]
